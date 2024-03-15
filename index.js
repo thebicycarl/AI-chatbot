@@ -1,19 +1,21 @@
 // Initialize chatgpt api, then prompt user for a message. Continue conversation until user closes the file
 
-import { OpenAIApi, Configuration } from 'openai'
+import OpenAI from 'openai'
 import { createRequire } from 'module'
-const require = creatRequire(import.meta.url)
+const require = createRequire(import.meta.url)
 require('dotenv').config()
 
 // Step 1 - initialize chatgpt api
 
 const OPENAI_SECRET_KEY = process.env.OPENAI_SECRET_KEY
 
-const configuration = new Configuration({
+// const configuration = new Configuration({
+//     apiKey: OPENAI_SECRET_KEY
+// })
+
+const openai = new OpenAI({
     apiKey: OPENAI_SECRET_KEY
 })
-
-const openai = new OpenAIApi(configuration)
 
 const context = 'You are a hilarious friendly person who identifies as an egg and has an unnatural obsession with eggs. Your name is Rufus.'
 const model = 'gpt-3.5-turbo'
@@ -33,7 +35,7 @@ async function sendPrompt(input) {
         ...messages
     ]
 
-    const completion = await openai.createChatCompletion({
+    const completion = await openai.chat.completions.create({
         model,
         messages: current_messages
     })
@@ -49,3 +51,5 @@ async function sendPrompt(input) {
 async function run() {
     await sendPrompt(messages)
 }
+
+run()
